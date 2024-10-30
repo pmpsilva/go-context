@@ -48,9 +48,10 @@ func fetchDate(ctx context.Context, identifier int) (int, error) {
 	}()
 
 	for {
+		//The select statement in Go allows you to wait on multiple channel operations
 		select {
-		case <-childContext.Done():
-			return 408, fmt.Errorf("request imeout")
+		case <-childContext.Done()://returns a channel that gets closed when the context is canceled or times out.
+			return 408, fmt.Errorf("request timeout")
 		case resp := <-respchan:
 			return resp.statusCode, resp.err
 		}
